@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Semaphore Modern Pro</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        body {
+            background-color: #1a1a2e;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        /* 16:9 Aspect Ratio Container */
+        #game-wrapper {
+            width: 100vw;
+            height: 56.25vw; /* 16:9 ratio */
+            max-width: 100%;
+            max-height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, #16213e, #0f3460);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        /* Scaled Content Inner Box */
+        #game-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1280px;
+            height: 720px;
+            transform-origin: center center;
+        }
+
+        /* Screen States */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Splash Screen */
+        #splash-screen {
+            background: radial-gradient(circle, #1f4068 0%, #16213e 100%);
+        }
+
+        .title-container {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite alternate;
+        }
+
+        h1 {
+            font-size: 64px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #e94560;
+            text-shadow: 0 4px 10px rgba(233, 69, 96, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #00d2d3;
+            letter-spacing: 2px;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: #e94560;
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 22px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background-color: #ff5773;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(233, 69, 96, 0.6);
+        }
+
+        .btn:disabled {
+            background-color: #4a4a5a;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.6;
+        }
+
+        /* Level Menu */
+        .menu-grid {
+            display: flex;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .level-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #00d2d3;
+            border-radius: 20px;
+            padding: 30px;
+            width: 250px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .level-btn:hover {
+            background: rgba(0, 210, 211, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 210, 211, 0.2);
+        }
+
+        .level-btn h3 {
+            font-size: 22px;
+            color: #00d2d3;
+            margin-bottom: 10px;
+        }
+
+        .level-btn p {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        /* Gameplay Layout */
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 30px;
+            padding: 0 50px;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 25px;
+            border-radius: 15px;
+            font-size: 18px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        #level-indicator {
+            color: #00d2d3;
+            font-weight: bold;
+        }
+
+        /* Display Semaphore Area */
+        .display-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 360px;
+            height: 360px;
+            margin-top: 50px;
+            background-image: radial-gradient(white, rgba(0,0,0,0.1));
+            border-radius: 180px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .semaphore-img {
+            height: 340px;
+            object-fit: contain;
+            transition: all 0.2s ease;
+        }
+
+        /* Animation & Sequence Controls */
+        .sequence-controls {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            height: 25px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #555;
+            transition: background-color 0.3s;
+        }
+
+        .status-dot.active {
+            background-color: #00d2d3;
+            box-shadow: 0 0 10px #00d2d3;
+        }
+
+        .status-dot.space {
+            background-color: #e94560;
+            width: 8px;
+            height: 8px;
+        }
+
+        /* Input Controls */
+        .input-area {
+            margin-top: 25px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .answer-input {
+            width: 450px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid #00d2d3;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 24px;
+            color: white;
+            text-align: center;
+            text-transform: uppercase;
+            outline: none;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .answer-input:focus {
+            box-shadow: 0 0 15px rgba(0, 210, 211, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-ok {
+            background-color: #1dd1a1;
+            padding: 14px 35px;
+            font-size: 22px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(29, 209, 161, 0.3);
+        }
+
+        .btn-ok:hover {
+            background-color: #10ac84;
+            box-shadow: 0 10px 20px rgba(29, 209, 161, 0.5);
+        }
+
+        .feedback {
+            font-size: 26px;
+            font-weight: bold;
+            margin-top: 5px;
+            height: 32px;
+            transition: all 0.2s;
+        }
+        .correct { color: #1dd1a1; text-shadow: 0 0 10px rgba(29,209,161,0.3); }
+        .wrong { color: #ff6b6b; text-shadow: 0 0 10px rgba(255,107,107,0.3); }
+
+        /* End Screen */
+        .score-summary {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 20px;
+            width: 500px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .score-val {
+            font-size: 72px;
+            color: #00d2d3;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.03); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-wrapper">
+        <div id="game-container">
+            
+            <!-- 1. SPLASH SCREEN & MENU LEVEL -->
+            <div id="splash-screen" class="screen active">
+                <div class="title-container">
+                    <svg viewBox="0 0 500 150" width="100%" height="150">
+                        <defs>
+                            <path id="curve" d="M 50,120 Q 250,30 450,120" fill="transparent" />
+                        </defs>
+                        <text font-family="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" font-size="46" font-weight="bold" fill="#e94560">
+                            <textPath href="#curve" startOffset="50%" text-anchor="middle">
+                                GAME SEMAPHORE
+                            </textPath>
+                        </text>
+                    </svg>
+                    <div style="margin-bottom: 20px; height: 240px; display: flex; justify-content: center; align-items: center;">
+                        <img src="img/u.png" id="splash-anim-frame" style="height: 100%; object-fit: contain;">
+                    </div>
+                    <div class="subtitle">Pilih Level untuk Memulai Permainan</div>
+                </div>
+                
+                <div class="menu-grid">
+                    <div class="level-btn" onclick="startLevel(1)">
+                        <h3>LEVEL 1</h3>
+                        <p>Tebak Huruf</p>
+                        <p style="margin-top:5px; color:#00d2d3; font-weight:bold;">Status: Terbuka</p>
+                    </div>
+                    <div class="level-btn" onclick="startLevel(2)">
+                        <h3>LEVEL 2</h3>
+                        <p>Tebak Kata</p>
+                        <p style="margin-top:5px; color:#00d2d3; font-weight:bold;">Status: Terbuka</p>
+                    </div>
+                    <div class="level-btn" onclick="startLevel(3)">
+                        <h3>LEVEL 3</h3>
+                        <p>Tebak Kalimat</p>
+                        <p style="margin-top:5px; color:#00d2d3; font-weight:bold;">Status: Terbuka</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. GAMEPLAY SCREEN -->
+            <div id="game-screen" class="screen">
+                <div class="game-header">
+                    <div class="info-box" id="level-indicator">LEVEL 1: TEBAK HURUF</div>
+                    <div class="info-box" id="question-indicator">Soal: 1 / 5</div>
+                    <div class="info-box" id="replay-indicator">Sisa Ulangi: 3</div>
+                    <div class="info-box" id="wrong-indicator" style="color: #ff6b6b;">Salah: 0 / 3</div>
+                    <div class="info-box" id="score-indicator">Skor Game: 0</div>
+                </div>
+
+                <!-- Area Peragaan Semaphore -->
+                <div class="display-area" id="display-area"></div>
+
+                <!-- Indikator sekuensial -->
+                <div class="sequence-controls" id="sequence-dots"></div>
+                <div style="margin-top: 10px;" id="replay-container"></div>
+
+                <!-- Form Input & Button OK -->
+                <div class="input-area">
+                    <div class="input-row">
+                        <input type="text" id="answer-input" class="answer-input" placeholder="Ketik jawaban di sini..." autocomplete="off">
+                        <button class="btn btn-ok" id="btn-submit" onclick="checkAnswer()">OK</button>
+                    </div>
+                    <div class="feedback" id="feedback-msg"></div>
+                </div>
+            </div>
+
+            <!-- 3. FINISH SCREEN -->
+            <div id="finish-screen" class="screen">
+                <div class="title-container">
+                    <h1 id="finish-title">Selesai!</h1>
+                    <div class="subtitle" id="finish-subtitle">Level Berhasil Diselesaikan</div>
+                </div>
+                <div class="score-summary">
+                    <div>Skor Anda pada Level Ini:</div>
+                    <div class="score-val" id="final-score">0</div>
+                    <div id="performance-rating" style="font-size: 20px; font-weight: bold;">Luar Biasa!</div>
+                </div>
+                <button class="btn" onclick="returnToMenu()">Kembali ke Menu</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Audio Engine menggunakan file MP3 dari folder sound/
+        const audio = {
+            beep: new Audio('sound/beep.mp3'),
+            correct: new Audio('sound/correct.mp3'),
+            wrong: new Audio('sound/wrong.mp3'),
+            win: new Audio('sound/win.mp3'),
+            lose: new Audio('sound/lose.mp3')
+        };
+
+        function playSound(soundName) {
+            if (audio[soundName]) {
+                audio[soundName].currentTime = 0;
+                audio[soundName].play().catch(e => console.log("Audio play blocked/failed:", e));
+            }
+        }
+
+        // Mencegah Klik Kanan dan Kombinasi Salin
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 85 || e.keyCode === 73)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Pengaturan Skala Proporsional 16:9
+        function adjustGameScale() {
+            const wrapper = document.getElementById('game-wrapper');
+            const container = document.getElementById('game-container');
+            const scale = Math.min(wrapper.clientWidth / 1280, wrapper.clientHeight / 720);
+            container.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        }
+        window.addEventListener('resize', adjustGameScale);
+        window.addEventListener('load', adjustGameScale);
+
+        // DATA GAMEPLAY - Silakan tambah kata/kalimat sesuka Anda di sini
+        const gameData = {
+            1: [ 
+                { answer: "A" }, { answer: "B" }, { answer: "C" }, { answer: "D" }, { answer: "E" },
+                { answer: "F" }, { answer: "G" }, { answer: "H" }, { answer: "I" }, { answer: "J" },
+                { answer: "K" }, { answer: "L" }, { answer: "M" }, { answer: "N" }, { answer: "O" },
+                { answer: "P" }, { answer: "Q" }, { answer: "R" }, { answer: "S" }, { answer: "T" },
+                { answer: "U" }, { answer: "V" }, { answer: "W" }, { answer: "X" }, { answer: "Y" }, 
+                { answer: "Z" }
+            ],
+            2: [ 
+                { answer: "PRAMUKA" },      { answer: "SANDI" },    { answer: "TUNAS" },    { answer: "SIAGA" },    { answer: "BANTU" },
+                { answer: "PENGGALANG" },   { answer: "PENEGAK" },  { answer: "PANDEGA" },  { answer: "KEMAH" },    { answer: "TONGKAT" },
+                { answer: "TALI" },         { answer: "KOMPAS" },   { answer: "BANTARA" },  { answer: "LAKSANA" },
+                { answer: "SEMAPHORE"},     { answer: "PRADANA"},   { answer: "PRATAMA"},   { answer: "PANDU"},
+                { answer: "API UNGGUN"},    { answer: "DWISATYA"},  { answer: "DWIDARMA"},  { answer: "SCOUT"}
+            ],
+            3: [ 
+                { answer: "SALAM PRAMUKA" }, { answer: "SAYA ANAK INDONESIA" }, { answer: "SIAP SEDIA SETIAP SAAT" }, 
+                { answer: "DISIPLIN BERANI DAN SETIA" }, { answer: "PRAJA MUDA KARANA" }, { answer: "DASADARMA PRAMUKA" },
+                { answer: "PATUH DAN SUKA BERMUSYAWARAH" }, { answer: "IKHLAS BAKTI BINA BANGSA" }, { answer: "HEMAT CERMAT DAN BERSAHAJA" },
+                { answer: "AYO LATIHAN BERSAMA" }, { answer: "RAJIN TERAMPIL DAN GEMBIRA" }, { answer: "KAMI MANUSIA PANCASILA" }
+            ]
+        };
+
+        // State game per permainan level
+        let currentLevel = 1;
+        let currentQuestionIdx = 0;
+        let score = 0;
+        let totalWrongCount = 0;
+        let totalReplayCount = 3;
+        
+        // Array khusus penampung soal acak sesi ini
+        let activeSessionQuestions = [];
+        
+        let animationTimer = null;
+        let currentSequence = [];
+        let currentAnimIdx = 0;
+
+        const splashScreen = document.getElementById('splash-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const finishScreen = document.getElementById('finish-screen');
+        const answerInput = document.getElementById('answer-input');
+        const btnSubmit = document.getElementById('btn-submit');
+
+        // Fungsi Pengacak Array dengan Fisher-Yates Shuffle
+        function shuffleArray(array) {
+            let shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function showScreen(screen) {
+            [splashScreen, gameScreen, finishScreen].forEach(s => s.classList.remove('active'));
+            screen.classList.add('active');
+            adjustGameScale();
+        }
+
+        function startLevel(levelNum) {
+            currentLevel = levelNum;
+            currentQuestionIdx = 0;
+            score = 0;
+            totalWrongCount = 0;
+            totalReplayCount = 3;
+
+            // Mengacak daftar dari gameData dan memilih 5 soal teratas untuk sesi ini
+            const shuffledPool = shuffleArray(gameData[currentLevel]);
+            activeSessionQuestions = shuffledPool.slice(0, 5);
+            
+            showScreen(gameScreen);
+            loadQuestion();
+        }
+
+        function returnToMenu() {
+            showScreen(splashScreen);
+        }
+
+        function loadQuestion() {
+            answerInput.value = "";
+            answerInput.disabled = false;
+            btnSubmit.disabled = false;
+            document.getElementById('feedback-msg').textContent = "";
+            document.getElementById('feedback-msg').className = "feedback";
+            clearInterval(animationTimer);
+            
+            // Update Header Info
+            let levelTitle = ["", "LEVEL 1: TEBAK HURUF", "LEVEL 2: TEBAK KATA", "LEVEL 3: TEBAK KALIMAT"][currentLevel];
+            document.getElementById('level-indicator').textContent = levelTitle;
+            document.getElementById('question-indicator').textContent = `Soal: ${currentQuestionIdx + 1} / 5`;
+            document.getElementById('replay-indicator').textContent = `Sisa Ulangi: ${totalReplayCount}`;
+            document.getElementById('wrong-indicator').textContent = `Salah: ${totalWrongCount} / 3`;
+            document.getElementById('score-indicator').textContent = `Skor: ${score}`;
+
+            // Mengambil data soal dari antrean sesi acak
+            const currentData = activeSessionQuestions[currentQuestionIdx];
+            const answerStr = currentData.answer;
+
+            const displayArea = document.getElementById('display-area');
+            const dotsContainer = document.getElementById('sequence-dots');
+            const replayContainer = document.getElementById('replay-container');
+            
+            displayArea.innerHTML = "";
+            dotsContainer.innerHTML = "";
+            replayContainer.innerHTML = "";
+
+            if (currentLevel === 1) {
+                const img = document.createElement('img');
+                img.src = `img/${answerStr.toLowerCase()}.png`;
+                img.className = 'semaphore-img';
+                img.onerror = function() { this.src = 'img/siap.png'; };
+                displayArea.appendChild(img);
+                playSound('beep'); 
+                answerInput.focus();
+            } else {
+                currentSequence = Array.from(answerStr);
+                
+                currentSequence.forEach((char, index) => {
+                    const dot = document.createElement('div');
+                    dot.className = char === ' ' ? 'status-dot space' : 'status-dot';
+                    dot.id = `dot-${index}`;
+                    dotsContainer.appendChild(dot);
+                });
+
+                const replayBtn = document.createElement('button');
+                replayBtn.className = 'btn';
+                replayBtn.id = 'btn-replay-action';
+                replayBtn.style.padding = '8px 20px';
+                replayBtn.style.fontSize = '14px';
+                replayBtn.textContent = `Putar Ulang Isyarat (${totalReplayCount})`;
+                replayBtn.onclick = triggerReplay;
+                if(totalReplayCount <= 0) replayBtn.disabled = true;
+                replayContainer.appendChild(replayBtn);
+
+                playSequence();
+            }
+        }
+
+        function triggerReplay() {
+            if(totalReplayCount > 0) {
+                totalReplayCount--;
+                document.getElementById('replay-indicator').textContent = `Sisa Ulangi: ${totalReplayCount}`;
+                const rBtn = document.getElementById('btn-replay-action');
+                if(rBtn) {
+                    rBtn.textContent = `Putar Ulang Isyarat (${totalReplayCount})`;
+                    if(totalReplayCount <= 0) rBtn.disabled = true;
+                }
+                playSequence();
+            }
+        }
+
+        function playSequence() {
+            clearInterval(animationTimer);
+            const displayArea = document.getElementById('display-area');
+            currentAnimIdx = 0;
+            
+            displayArea.innerHTML = `<img src="img/siap.png" class="semaphore-img" id="anim-frame">`;
+            resetDots();
+
+            let step = 0;
+            
+            animationTimer = setInterval(() => {
+                const imgFrame = document.getElementById('anim-frame');
+                if(!imgFrame) return;
+
+                if (step === 0) {
+                    step = 1;
+                    highlightDot(0);
+                    let char = currentSequence[0];
+                    imgFrame.src = char === ' ' ? 'img/siap.png' : `img/${char.toLowerCase()}.png`;
+                    playSound('beep');
+                } else {
+                    currentAnimIdx++;
+                    if (currentAnimIdx < currentSequence.length) {
+                        highlightDot(currentAnimIdx);
+                        let char = currentSequence[currentAnimIdx];
+                        imgFrame.src = char === ' ' ? 'img/siap.png' : `img/${char.toLowerCase()}.png`;
+                        playSound('beep');
+                    } else {
+                        clearInterval(animationTimer);
+                        imgFrame.src = "img/siap.png";
+                        resetDots();
+                        answerInput.focus();
+                    }
+                }
+            }, 1000);
+        }
+
+        function resetDots() {
+            document.querySelectorAll('.status-dot').forEach(d => d.classList.remove('active'));
+        }
+
+        function highlightDot(idx) {
+            resetDots();
+            const targetDot = document.getElementById(`dot-${idx}`);
+            if(targetDot) targetDot.classList.add('active');
+        }
+
+        function checkAnswer() {
+            if(answerInput.disabled) return;
+
+            const currentData = activeSessionQuestions[currentQuestionIdx];
+            const userAnswer = answerInput.value.trim().toUpperCase();
+            const feedbackMsg = document.getElementById('feedback-msg');
+
+            answerInput.disabled = true;
+            btnSubmit.disabled = true;
+            clearInterval(animationTimer);
+
+            if (userAnswer === currentData.answer) {
+                playSound('correct');
+                feedbackMsg.textContent = "BENAR!";
+                feedbackMsg.className = "feedback correct";
+                score += (currentLevel * 10);
+                
+                document.getElementById('score-indicator').textContent = `Skor: ${score}`;
+
+                setTimeout(() => {
+                    nextQuestion();
+                }, 2500);
+            } else {
+                playSound('wrong');
+                totalWrongCount++;
+                document.getElementById('wrong-indicator').textContent = `Salah: ${totalWrongCount} / 3`;
+                
+                feedbackMsg.textContent = `SALAH! Jawaban yang benar: ${currentData.answer}`;
+                feedbackMsg.className = "feedback wrong";
+
+                setTimeout(() => {
+                    if (totalWrongCount >= 3) {
+                        endGame(false);
+                    } else {
+                        nextQuestion();
+                    }
+                }, 2500);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIdx++;
+            if (currentQuestionIdx >= 5) {
+                endGame(true);
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function endGame(isWin) {
+            clearInterval(animationTimer);
+            showScreen(finishScreen);
+            document.getElementById('final-score').textContent = score;
+            
+            const title = document.getElementById('finish-title');
+            const subtitle = document.getElementById('finish-subtitle');
+            const rating = document.getElementById('performance-rating');
+
+            if (isWin) {
+                playSound('win');
+                title.textContent = "LEVEL SELESAI!";
+                title.style.color = "#1dd1a1";
+                subtitle.textContent = "Kamu berhasil menyelesaikan level ini!";
+                rating.textContent = "Luar Biasa! Kemampuanmu Sangat Hebat.";
+                rating.style.color = "#1dd1a1";
+            } else {
+                playSound('lose');
+                title.textContent = "GAME OVER!";
+                title.style.color = "#e94560";
+                subtitle.textContent = "Kamu salah sebanyak 3 kali pada level ini.";
+                rating.textContent = "Jangan Menyerah! Coba lagi dan pertajam analisismu.";
+                rating.style.color = "#ff6b6b";
+            }
+        }
+
+        // Animasi Isyarat Perhatian (U - R) di Splash Screen
+        let splashState = 0; // 0 untuk U, 1 untuk R
+        
+        function startSplashAnimation() {
+            const splashImg = document.getElementById('splash-anim-frame');
+            if (!splashImg) return;
+            
+            setInterval(() => {
+                if (splashState === 0) {
+                    splashImg.src = "img/r.png";
+                    splashState = 1;
+                } else {
+                    splashImg.src = "img/u.png";
+                    splashState = 0;
+                }
+            }, 500); // 500 ms
+        }
+
+        // Jalankan fungsi animasi begitu halaman selesai dimuat
+        window.addEventListener('DOMContentLoaded', startSplashAnimation);
+    </script>
+</body>
+</html>
