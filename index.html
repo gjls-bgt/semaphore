@@ -26,10 +26,9 @@
             color: #ffffff;
         }
 
-        /* 16:9 Aspect Ratio Container */
         #game-wrapper {
             width: 100vw;
-            height: 56.25vw; /* 16:9 ratio */
+            height: 56.25vw;
             max-width: 100%;
             max-height: 100vh;
             position: relative;
@@ -38,7 +37,6 @@
             overflow: hidden;
         }
 
-        /* Scaled Content Inner Box */
         #game-container {
             position: absolute;
             top: 50%;
@@ -49,7 +47,6 @@
             transform-origin: center center;
         }
 
-        /* Screen States */
         .screen {
             position: absolute;
             top: 0;
@@ -71,14 +68,13 @@
             pointer-events: auto;
         }
 
-        /* Splash Screen */
         #splash-screen {
             background: radial-gradient(circle, #1f4068 0%, #16213e 100%);
         }
 
         .title-container {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             animation: pulse 2s infinite alternate;
         }
 
@@ -97,7 +93,6 @@
             letter-spacing: 2px;
         }
 
-        /* Buttons */
         .btn {
             background-color: #e94560;
             color: white;
@@ -126,7 +121,6 @@
             opacity: 0.6;
         }
 
-        /* Level Menu */
         .menu-grid {
             display: flex;
             gap: 25px;
@@ -161,14 +155,13 @@
             color: #aaa;
         }
 
-        /* Gameplay Layout */
         .game-header {
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: absolute;
-            top: 30px;
+            top: 25px;
             padding: 0 50px;
         }
 
@@ -186,14 +179,13 @@
             font-weight: bold;
         }
 
-        /* Display Semaphore Area */
         .display-area {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 360px;
-            height: 360px;
-            margin-top: 50px;
+            width: 320px;
+            height: 320px;
+            margin-top: 40px;
             background-image: radial-gradient(white, rgba(0,0,0,0.1));
             border-radius: 180px;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -201,17 +193,15 @@
         }
 
         .semaphore-img {
-            height: 340px;
+            height: 300px;
             object-fit: contain;
-            transition: all 0.2s ease;
         }
 
-        /* Animation & Sequence Controls */
         .sequence-controls {
-            margin-top: 15px;
+            margin-top: 10px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             height: 25px;
         }
 
@@ -234,14 +224,13 @@
             height: 8px;
         }
 
-        /* Input Controls */
         .input-area {
-            margin-top: 25px;
+            margin-top: 15px;
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .input-row {
@@ -255,7 +244,7 @@
             background: rgba(255, 255, 255, 0.08);
             border: 2px solid #00d2d3;
             border-radius: 12px;
-            padding: 14px 20px;
+            padding: 12px 20px;
             font-size: 24px;
             color: white;
             text-align: center;
@@ -272,7 +261,7 @@
 
         .btn-ok {
             background-color: #1dd1a1;
-            padding: 14px 35px;
+            padding: 12px 35px;
             font-size: 22px;
             border-radius: 12px;
             box-shadow: 0 6px 15px rgba(29, 209, 161, 0.3);
@@ -283,17 +272,54 @@
             box-shadow: 0 10px 20px rgba(29, 209, 161, 0.5);
         }
 
+        /* Keyboard Virtual Level 1 (2 Baris) */
+        .keyboard-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .keyboard-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .letter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #00d2d3;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .letter-btn:hover {
+            background-color: #00d2d3;
+            color: #1a1a2e;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0, 210, 211, 0.5);
+        }
+
         .feedback {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: bold;
             margin-top: 5px;
-            height: 32px;
+            height: 30px;
             transition: all 0.2s;
         }
         .correct { color: #1dd1a1; text-shadow: 0 0 10px rgba(29,209,161,0.3); }
         .wrong { color: #ff6b6b; text-shadow: 0 0 10px rgba(255,107,107,0.3); }
 
-        /* End Screen */
         .score-summary {
             background: rgba(255,255,255,0.05);
             padding: 30px;
@@ -335,7 +361,7 @@
                             </textPath>
                         </text>
                     </svg>
-                    <div style="margin-bottom: 20px; height: 240px; display: flex; justify-content: center; align-items: center;">
+                    <div style="margin-bottom: 20px; height: 200px; display: flex; justify-content: center; align-items: center;">
                         <img src="img/u.png" id="splash-anim-frame" style="height: 100%; object-fit: contain;">
                     </div>
                     <div class="subtitle">Pilih Level untuk Memulai Permainan</div>
@@ -370,21 +396,13 @@
                     <div class="info-box" id="score-indicator">Skor Game: 0</div>
                 </div>
 
-                <!-- Area Peragaan Semaphore -->
                 <div class="display-area" id="display-area"></div>
 
-                <!-- Indikator sekuensial -->
                 <div class="sequence-controls" id="sequence-dots"></div>
-                <div style="margin-top: 10px;" id="replay-container"></div>
+                <div style="margin-top: 5px;" id="replay-container"></div>
 
-                <!-- Form Input & Button OK -->
-                <div class="input-area">
-                    <div class="input-row">
-                        <input type="text" id="answer-input" class="answer-input" placeholder="Ketik jawaban di sini..." autocomplete="off">
-                        <button class="btn btn-ok" id="btn-submit" onclick="checkAnswer()">OK</button>
-                    </div>
-                    <div class="feedback" id="feedback-msg"></div>
-                </div>
+                <div class="input-area" id="input-area"></div>
+                <div class="feedback" id="feedback-msg"></div>
             </div>
 
             <!-- 3. FINISH SCREEN -->
@@ -405,7 +423,7 @@
     </div>
 
     <script>
-        // Audio Engine menggunakan file MP3 dari folder sound/
+        // Audio Engine
         const audio = {
             beep: new Audio('sound/beep.mp3'),
             correct: new Audio('sound/correct.mp3'),
@@ -421,16 +439,28 @@
             }
         }
 
-        // Mencegah Klik Kanan dan Kombinasi Salin
+        // PRELOAD IMAGE ENGINE
+        // Memuat seluruh gambar ke memori browser agar transisi tidak terlambat/lag
+        const imageCache = [];
+        const imageList = [
+            'img/siap.png',
+            ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(char => `img/${char.toLowerCase()}.png`)
+        ];
+
+        function preloadImages() {
+            imageList.forEach(src => {
+                const img = new Image();
+                img.src = src;
+                imageCache.push(img);
+            });
+        }
+
+        // Mencegah Klik Kanan & Shortcut bawaan browser
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && currentLevel !== 1) {
                 e.preventDefault();
-                return false;
-            }
-            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 85 || e.keyCode === 73)) {
-                e.preventDefault();
-                return false;
+                checkAnswer();
             }
         });
 
@@ -444,7 +474,7 @@
         window.addEventListener('resize', adjustGameScale);
         window.addEventListener('load', adjustGameScale);
 
-        // DATA GAMEPLAY - Silakan tambah kata/kalimat sesuka Anda di sini
+        // DATA GAMEPLAY
         const gameData = {
             1: [ 
                 { answer: "A" }, { answer: "B" }, { answer: "C" }, { answer: "D" }, { answer: "E" },
@@ -459,7 +489,8 @@
                 { answer: "PENGGALANG" },   { answer: "PENEGAK" },  { answer: "PANDEGA" },  { answer: "KEMAH" },    { answer: "TONGKAT" },
                 { answer: "TALI" },         { answer: "KOMPAS" },   { answer: "BANTARA" },  { answer: "LAKSANA" },
                 { answer: "SEMAPHORE"},     { answer: "PRADANA"},   { answer: "PRATAMA"},   { answer: "PANDU"},
-                { answer: "API UNGGUN"},    { answer: "DWISATYA"},  { answer: "DWIDARMA"},  { answer: "SCOUT"}
+                { answer: "API UNGGUN"},    { answer: "DWISATYA"},  { answer: "DWIDARMA"},  { answer: "MINGGU"},
+                { answer: "MAAF"}
             ],
             3: [ 
                 { answer: "SALAM PRAMUKA" }, { answer: "SAYA ANAK INDONESIA" }, { answer: "SIAP SEDIA SETIAP SAAT" }, 
@@ -469,27 +500,21 @@
             ]
         };
 
-        // State game per permainan level
+        // State Gameplay
         let currentLevel = 1;
         let currentQuestionIdx = 0;
         let score = 0;
         let totalWrongCount = 0;
         let totalReplayCount = 3;
-        
-        // Array khusus penampung soal acak sesi ini
         let activeSessionQuestions = [];
         
-        let animationTimer = null;
+        let sequenceTimeouts = [];
         let currentSequence = [];
-        let currentAnimIdx = 0;
 
         const splashScreen = document.getElementById('splash-screen');
         const gameScreen = document.getElementById('game-screen');
         const finishScreen = document.getElementById('finish-screen');
-        const answerInput = document.getElementById('answer-input');
-        const btnSubmit = document.getElementById('btn-submit');
 
-        // Fungsi Pengacak Array dengan Fisher-Yates Shuffle
         function shuffleArray(array) {
             let shuffled = [...array];
             for (let i = shuffled.length - 1; i > 0; i--) {
@@ -497,6 +522,11 @@
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
             return shuffled;
+        }
+
+        function clearAllTimeouts() {
+            sequenceTimeouts.forEach(t => clearTimeout(t));
+            sequenceTimeouts = [];
         }
 
         function showScreen(screen) {
@@ -512,7 +542,6 @@
             totalWrongCount = 0;
             totalReplayCount = 3;
 
-            // Mengacak daftar dari gameData dan memilih 5 soal teratas untuk sesi ini
             const shuffledPool = shuffleArray(gameData[currentLevel]);
             activeSessionQuestions = shuffledPool.slice(0, 5);
             
@@ -521,18 +550,16 @@
         }
 
         function returnToMenu() {
+            clearAllTimeouts();
             showScreen(splashScreen);
         }
 
         function loadQuestion() {
-            answerInput.value = "";
-            answerInput.disabled = false;
-            btnSubmit.disabled = false;
+            clearAllTimeouts();
+            
             document.getElementById('feedback-msg').textContent = "";
             document.getElementById('feedback-msg').className = "feedback";
-            clearInterval(animationTimer);
             
-            // Update Header Info
             let levelTitle = ["", "LEVEL 1: TEBAK HURUF", "LEVEL 2: TEBAK KATA", "LEVEL 3: TEBAK KALIMAT"][currentLevel];
             document.getElementById('level-indicator').textContent = levelTitle;
             document.getElementById('question-indicator').textContent = `Soal: ${currentQuestionIdx + 1} / 5`;
@@ -540,27 +567,79 @@
             document.getElementById('wrong-indicator').textContent = `Salah: ${totalWrongCount} / 3`;
             document.getElementById('score-indicator').textContent = `Skor: ${score}`;
 
-            // Mengambil data soal dari antrean sesi acak
             const currentData = activeSessionQuestions[currentQuestionIdx];
             const answerStr = currentData.answer;
 
             const displayArea = document.getElementById('display-area');
             const dotsContainer = document.getElementById('sequence-dots');
             const replayContainer = document.getElementById('replay-container');
+            const inputArea = document.getElementById('input-area');
             
             displayArea.innerHTML = "";
             dotsContainer.innerHTML = "";
             replayContainer.innerHTML = "";
+            inputArea.innerHTML = "";
 
             if (currentLevel === 1) {
+                // Tampilan Peragaan Gambar Level 1
                 const img = document.createElement('img');
                 img.src = `img/${answerStr.toLowerCase()}.png`;
                 img.className = 'semaphore-img';
                 img.onerror = function() { this.src = 'img/siap.png'; };
                 displayArea.appendChild(img);
                 playSound('beep'); 
-                answerInput.focus();
+
+                // Tampilan Keyboard Virtual A-Z Dalam 2 Baris (A-M & N-Z)
+                const kbContainer = document.createElement('div');
+                kbContainer.className = 'keyboard-container';
+
+                const row1 = document.createElement('div');
+                row1.className = 'keyboard-row';
+                const row2 = document.createElement('div');
+                row2.className = 'keyboard-row';
+
+                "ABCDEFGHIJKLM".split("").forEach(char => {
+                    const btn = document.createElement('button');
+                    btn.className = 'letter-btn';
+                    btn.textContent = char;
+                    btn.onclick = () => selectLetter(char);
+                    row1.appendChild(btn);
+                });
+
+                "NOPQRSTUVWXYZ".split("").forEach(char => {
+                    const btn = document.createElement('button');
+                    btn.className = 'letter-btn';
+                    btn.textContent = char;
+                    btn.onclick = () => selectLetter(char);
+                    row2.appendChild(btn);
+                });
+
+                kbContainer.appendChild(row1);
+                kbContainer.appendChild(row2);
+                inputArea.appendChild(kbContainer);
+
             } else {
+                // Input Teks untuk Level 2 & 3
+                const row = document.createElement('div');
+                row.className = 'input-row';
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'answer-input';
+                input.className = 'answer-input';
+                input.placeholder = 'Ketik jawaban di sini...';
+                input.autocomplete = 'off';
+
+                const btnOk = document.createElement('button');
+                btnOk.className = 'btn btn-ok';
+                btnOk.id = 'btn-submit';
+                btnOk.textContent = 'OK';
+                btnOk.onclick = checkAnswer;
+
+                row.appendChild(input);
+                row.appendChild(btnOk);
+                inputArea.appendChild(row);
+
                 currentSequence = Array.from(answerStr);
                 
                 currentSequence.forEach((char, index) => {
@@ -584,6 +663,12 @@
             }
         }
 
+        function selectLetter(char) {
+            const btns = document.querySelectorAll('.letter-btn');
+            btns.forEach(b => b.disabled = true);
+            checkAnswer(char);
+        }
+
         function triggerReplay() {
             if(totalReplayCount > 0) {
                 totalReplayCount--;
@@ -597,41 +682,57 @@
             }
         }
 
+        /* TRANSISI ISYARAT ASLI SEMAPHORE:
+           1. Pergantian antar-huruf yang berbeda langsung dilakukan.
+           2. Tampil posisi 'siap.png' HANYA saat ada SPASI atau HURUF KEMBAR berurutan. */
         function playSequence() {
-            clearInterval(animationTimer);
+            clearAllTimeouts();
             const displayArea = document.getElementById('display-area');
-            currentAnimIdx = 0;
             
             displayArea.innerHTML = `<img src="img/siap.png" class="semaphore-img" id="anim-frame">`;
             resetDots();
 
-            let step = 0;
+            const imgFrame = document.getElementById('anim-frame');
+            const letterDuration = 1000; // Tampil 1 detik per huruf
+            const pauseRepeatDuration = 300; // Jeda posisi siap untuk huruf kembar/spasi (ms)
             
-            animationTimer = setInterval(() => {
-                const imgFrame = document.getElementById('anim-frame');
-                if(!imgFrame) return;
+            let currentTime = 200; 
 
-                if (step === 0) {
-                    step = 1;
-                    highlightDot(0);
-                    let char = currentSequence[0];
-                    imgFrame.src = char === ' ' ? 'img/siap.png' : `img/${char.toLowerCase()}.png`;
-                    playSound('beep');
-                } else {
-                    currentAnimIdx++;
-                    if (currentAnimIdx < currentSequence.length) {
-                        highlightDot(currentAnimIdx);
-                        let char = currentSequence[currentAnimIdx];
-                        imgFrame.src = char === ' ' ? 'img/siap.png' : `img/${char.toLowerCase()}.png`;
-                        playSound('beep');
-                    } else {
-                        clearInterval(animationTimer);
-                        imgFrame.src = "img/siap.png";
-                        resetDots();
-                        answerInput.focus();
-                    }
+            currentSequence.forEach((char, idx) => {
+                let prevChar = idx > 0 ? currentSequence[idx - 1] : null;
+
+                // Cek jika huruf SAMA dengan huruf sebelumnya (misal 'A' & 'A' di "MAAF")
+                if (prevChar && char === prevChar && char !== ' ') {
+                    let tPause = setTimeout(() => {
+                        if(!imgFrame) return;
+                        imgFrame.src = 'img/siap.png';
+                    }, currentTime);
+                    sequenceTimeouts.push(tPause);
+                    
+                    currentTime += pauseRepeatDuration;
                 }
-            }, 1000);
+
+                // Tampilkan huruf
+                let tShow = setTimeout(() => {
+                    if(!imgFrame) return;
+                    highlightDot(idx);
+                    imgFrame.src = char === ' ' ? 'img/siap.png' : `img/${char.toLowerCase()}.png`;
+                    if (char !== ' ') playSound('beep');
+                }, currentTime);
+                sequenceTimeouts.push(tShow);
+
+                currentTime += letterDuration;
+            });
+
+            // Selesai animasi sekuens
+            let tEnd = setTimeout(() => {
+                if(!imgFrame) return;
+                imgFrame.src = "img/siap.png";
+                resetDots();
+                const input = document.getElementById('answer-input');
+                if(input) input.focus();
+            }, currentTime);
+            sequenceTimeouts.push(tEnd);
         }
 
         function resetDots() {
@@ -644,16 +745,24 @@
             if(targetDot) targetDot.classList.add('active');
         }
 
-        function checkAnswer() {
-            if(answerInput.disabled) return;
+        function checkAnswer(chosenChar = null) {
+            clearAllTimeouts();
 
             const currentData = activeSessionQuestions[currentQuestionIdx];
-            const userAnswer = answerInput.value.trim().toUpperCase();
-            const feedbackMsg = document.getElementById('feedback-msg');
+            let userAnswer = "";
 
-            answerInput.disabled = true;
-            btnSubmit.disabled = true;
-            clearInterval(animationTimer);
+            if (currentLevel === 1) {
+                userAnswer = chosenChar;
+            } else {
+                const input = document.getElementById('answer-input');
+                if(!input || input.disabled) return;
+                userAnswer = input.value.trim().toUpperCase();
+                input.disabled = true;
+                const btnSubmit = document.getElementById('btn-submit');
+                if(btnSubmit) btnSubmit.disabled = true;
+            }
+
+            const feedbackMsg = document.getElementById('feedback-msg');
 
             if (userAnswer === currentData.answer) {
                 playSound('correct');
@@ -665,7 +774,7 @@
 
                 setTimeout(() => {
                     nextQuestion();
-                }, 2500);
+                }, 2000);
             } else {
                 playSound('wrong');
                 totalWrongCount++;
@@ -680,7 +789,7 @@
                     } else {
                         nextQuestion();
                     }
-                }, 2500);
+                }, 2000);
             }
         }
 
@@ -694,7 +803,7 @@
         }
 
         function endGame(isWin) {
-            clearInterval(animationTimer);
+            clearAllTimeouts();
             showScreen(finishScreen);
             document.getElementById('final-score').textContent = score;
             
@@ -719,9 +828,8 @@
             }
         }
 
-        // Animasi Isyarat Perhatian (U - R) di Splash Screen
-        let splashState = 0; // 0 untuk U, 1 untuk R
-        
+        // Animasi Isyarat Perhatian U - R
+        let splashState = 0;
         function startSplashAnimation() {
             const splashImg = document.getElementById('splash-anim-frame');
             if (!splashImg) return;
@@ -734,12 +842,16 @@
                     splashImg.src = "img/u.png";
                     splashState = 0;
                 }
-            }, 500); // 500 ms
+            }, 500);
         }
 
-        // Jalankan fungsi animasi begitu halaman selesai dimuat
-        window.addEventListener('DOMContentLoaded', startSplashAnimation);
-        // GLOBAL BULLETPROOF SECURITY LAYER
+        // Event Listener Awal (Preload + Animasi Splash)
+        window.addEventListener('DOMContentLoaded', () => {
+            preloadImages();
+            startSplashAnimation();
+        });
+
+        // Layer Keamanan
         (function() {
             window.addEventListener('contextmenu', e => { e.preventDefault(); e.stopPropagation(); }, true);
             window.addEventListener('keydown', function(e) {
@@ -748,7 +860,6 @@
                 if (e.ctrlKey && ['U', 'S', 'A', 'C'].includes(e.key.toUpperCase())) { e.preventDefault(); e.stopPropagation(); }
             }, true);
         })();
-
     </script>
 </body>
 </html>
