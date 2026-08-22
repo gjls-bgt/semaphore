@@ -485,12 +485,12 @@
                 { answer: "Z" }
             ],
             2: [ 
-                { answer: "PRAMUKA" },      { answer: "SANDI" },    { answer: "TUNAS" },    { answer: "SIAGA" },    { answer: "BANTU" },
-                { answer: "PENGGALANG" },   { answer: "PENEGAK" },  { answer: "PANDEGA" },  { answer: "KEMAH" },    { answer: "TONGKAT" },
-                { answer: "TALI" },         { answer: "KOMPAS" },   { answer: "BANTARA" },  { answer: "LAKSANA" },
-                { answer: "SEMAPHORE"},     { answer: "PRADANA"},   { answer: "PRATAMA"},   { answer: "PANDU"},
-                { answer: "API UNGGUN"},    { answer: "DWISATYA"},  { answer: "DWIDARMA"},  { answer: "MINGGU"},
-                { answer: "MAAF"}
+                { answer: "PRAMUKA" }, { answer: "SANDI" }, { answer: "TUNAS" }, { answer: "SIAGA" }, { answer: "BANTU" },
+                { answer: "PENGGALANG" }, { answer: "PENEGAK" },  { answer: "PANDEGA" },  { answer: "KEMAH" }, { answer: "TONGKAT" },
+                { answer: "TALI" }, { answer: "KOMPAS" }, { answer: "BANTARA" }, { answer: "LAKSANA" }, { answer: "BHAYANGKARA"},
+                { answer: "SEMAPHORE"}, { answer: "PRADANA"}, { answer: "PRATAMA"},   { answer: "PANDU"}, { answer: "WIRA KARTIKA"},
+                { answer: "API UNGGUN"}, { answer: "DWISATYA"}, { answer: "DWIDARMA"},  { answer: "MINGGU"}, { answer: "BAKTI HUSADA"},
+                { answer: "MAAF"}, { answer: "WANA BAKTI"}, { answer: "DIRGANTARA"}, { answer: "TARUNA BUMI"},    
             ],
             3: [ 
                 { answer: "SALAM PRAMUKA" }, { answer: "SAYA ANAK INDONESIA" }, { answer: "SIAP SEDIA SETIAP SAAT" }, 
@@ -543,7 +543,7 @@
             totalReplayCount = 3;
 
             const shuffledPool = shuffleArray(gameData[currentLevel]);
-            activeSessionQuestions = shuffledPool.slice(0, 5);
+            activeSessionQuestions = shuffledPool.slice(0, 10);
             
             showScreen(gameScreen);
             loadQuestion();
@@ -562,7 +562,7 @@
             
             let levelTitle = ["", "LEVEL 1: TEBAK HURUF", "LEVEL 2: TEBAK KATA", "LEVEL 3: TEBAK KALIMAT"][currentLevel];
             document.getElementById('level-indicator').textContent = levelTitle;
-            document.getElementById('question-indicator').textContent = `Soal: ${currentQuestionIdx + 1} / 5`;
+            document.getElementById('question-indicator').textContent = `Soal: ${currentQuestionIdx + 1} / 10`;
             document.getElementById('replay-indicator').textContent = `Sisa Ulangi: ${totalReplayCount}`;
             document.getElementById('wrong-indicator').textContent = `Salah: ${totalWrongCount} / 3`;
             document.getElementById('score-indicator').textContent = `Skor: ${score}`;
@@ -795,7 +795,7 @@
 
         function nextQuestion() {
             currentQuestionIdx++;
-            if (currentQuestionIdx >= 5) {
+            if (currentQuestionIdx >= 10) {
                 endGame(true);
             } else {
                 loadQuestion();
